@@ -10,9 +10,7 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "evento_musical")
-@TableGenerator(name = "gen_evento", table = "id_gen", 
-                pkColumnName = "gen_name", valueColumnName = "gen_val",
-                pkColumnValue = "evento_gen", allocationSize = 1)
+@TableGenerator(name = "gen_evento", table = "id_gen", pkColumnName = "gen_name", valueColumnName = "gen_val", pkColumnValue = "evento_gen", allocationSize = 1)
 public abstract class EventoMusical implements Serializable {
 
     @Id
@@ -83,11 +81,13 @@ public abstract class EventoMusical implements Serializable {
         this.lugar = lugar;
     }
 
-    // MO2.1: equals y hashCode usando clave natural (codigo_evento)
+    // MO2.1: equals y hashCode
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EventoMusical)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof EventoMusical))
+            return false;
         EventoMusical that = (EventoMusical) o;
         return Objects.equals(codigo_evento, that.codigo_evento);
     }
@@ -97,7 +97,7 @@ public abstract class EventoMusical implements Serializable {
         return Objects.hash(codigo_evento);
     }
 
-    // MO2.2: Método funcionhash
+    // MO2.2: funcionhash requerida
     public String funcionhash() {
         LocalDateTime ahora = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

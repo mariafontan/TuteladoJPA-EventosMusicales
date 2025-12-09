@@ -16,162 +16,155 @@ public class ConciertoDaoJPA implements ConciertoDao {
         this.emf = (EntityManagerFactory) config;
     }
 
-    // MO4.1: Recuperación por clave natural usando consulta estática JPQL
+    // Recuperar
     @Override
     public Concierto recuperaPorCodigo(Integer codigo_evento) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
-            
             TypedQuery<Concierto> q = em.createQuery(
-                "SELECT c FROM Concierto c WHERE c.codigo_evento = :codigo", 
-                Concierto.class
-            );
+                    "SELECT c FROM Concierto c WHERE c.codigo_evento = :codigo",
+                    Concierto.class);
             q.setParameter("codigo", codigo_evento);
             Concierto resultado = q.getSingleResult();
-            
+
             em.getTransaction().commit();
-            em.close();
             return resultado;
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.2: Alta usando persist()
+    // Guardar
     @Override
     public void almacena(Concierto concierto) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
             em.persist(concierto);
             em.getTransaction().commit();
-            em.close();
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.3: Eliminación usando remove()
+    // Eliminar
     @Override
     public void elimina(Concierto concierto) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
             Concierto conciertoTmp = em.find(Concierto.class, concierto.getId_evento());
             em.remove(conciertoTmp);
             em.getTransaction().commit();
-            em.close();
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.4: Actualización usando merge()
+    // Modificar
     @Override
     public Concierto modifica(Concierto concierto) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
             Concierto conciertoTmp = em.merge(concierto);
             em.getTransaction().commit();
-            em.close();
             return conciertoTmp;
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.5: Inicializar colección LAZY (artistas) fuera de sesión
+    // Cargar Lazy
     @Override
     public Concierto restauraArtistas(Concierto concierto) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
-            
             // Recuperamos el concierto y forzamos la inicialización de la colección LAZY
             Concierto conciertoTmp = em.find(Concierto.class, concierto.getId_evento());
             conciertoTmp.getArtistas().size(); // Fuerza la inicialización
-            
+
             em.getTransaction().commit();
-            em.close();
             return conciertoTmp;
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.6.a: Consulta dinámica JPQL con INNER JOIN
+    // Contar por artista (INNER JOIN)
     @Override
     public Long contarConciertosPorArtista(String nombreArtista) {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
-            
             TypedQuery<Long> q = em.createQuery(
-                "SELECT COUNT(c) FROM Concierto c " +
-                "JOIN c.artistas a " +
-                "WHERE a.nombre = :nombre",
-                Long.class
-            );
+                    "SELECT COUNT(c) FROM Concierto c " +
+                            "JOIN c.artistas a " +
+                            "WHERE a.nombre = :nombre",
+                    Long.class);
             q.setParameter("nombre", nombreArtista);
             Long resultado = q.getSingleResult();
-            
+
             em.getTransaction().commit();
-            em.close();
             return resultado;
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 
-    // MO4.6.b: Consulta dinámica JPQL con OUTER JOIN
+    // Buscar todos (OUTER JOIN)
     @Override
     public java.util.List<Concierto> buscarConciertosConOSinArtistas() {
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
         try {
-            em = emf.createEntityManager();
-            em.getTransaction().begin();
-            
             TypedQuery<Concierto> q = em.createQuery(
-                "SELECT DISTINCT c FROM Concierto c " +
-                "LEFT JOIN c.artistas a",
-                Concierto.class
-            );
+                    "SELECT DISTINCT c FROM Concierto c " +
+                            "LEFT JOIN c.artistas a",
+                    Concierto.class);
             java.util.List<Concierto> resultado = q.getResultList();
-            
+
             em.getTransaction().commit();
-            em.close();
             return resultado;
         } catch (Exception ex) {
-            if (em != null && em.isOpen()) {
-                if (em.getTransaction().isActive()) em.getTransaction().rollback();
-                em.close();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-            throw (ex);
+            throw ex;
+        } finally {
+            em.close();
         }
     }
 }

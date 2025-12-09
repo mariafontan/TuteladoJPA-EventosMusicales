@@ -11,9 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "artista")
-@TableGenerator(name = "gen_artista", table = "id_gen", 
-                pkColumnName = "gen_name", valueColumnName = "gen_val",
-                pkColumnValue = "artista_gen", allocationSize = 1)
+@TableGenerator(name = "gen_artista", table = "id_gen", pkColumnName = "gen_name", valueColumnName = "gen_val", pkColumnValue = "artista_gen", allocationSize = 1)
 public class Artista implements Serializable {
 
     @Id
@@ -35,9 +33,7 @@ public class Artista implements Serializable {
 
     // Asociación con Festival (LAZY)
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "festival_artista",
-               joinColumns = @JoinColumn(name = "artista_id"),
-               inverseJoinColumns = @JoinColumn(name = "festival_id"))
+    @JoinTable(name = "festival_artista", joinColumns = @JoinColumn(name = "artista_id"), inverseJoinColumns = @JoinColumn(name = "festival_id"))
     private Set<Festival> festivales = new HashSet<>();
 
     // Constructores
@@ -108,11 +104,13 @@ public class Artista implements Serializable {
         this.festivales.remove(festival);
     }
 
-    // MO2.1: equals y hashCode usando clave natural (codigo_artista)
+    // MO2.1: equals y hashCode
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Artista)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Artista))
+            return false;
         Artista artista = (Artista) o;
         return Objects.equals(codigo_artista, artista.codigo_artista);
     }
@@ -122,7 +120,7 @@ public class Artista implements Serializable {
         return Objects.hash(codigo_artista);
     }
 
-    // MO2.2: Método funcionhash
+    // MO2.2: funcionhash
     public String funcionhash() {
         LocalDateTime ahora = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
