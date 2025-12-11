@@ -14,11 +14,9 @@ public class Concierto extends EventoMusical implements Serializable {
     @Column(nullable = false)
     private Integer aforo;
 
-    // Asociación bidireccional con Artista (LAZY con CASCADE)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "concierto_artista",
-               joinColumns = @JoinColumn(name = "concierto_id"),
-               inverseJoinColumns = @JoinColumn(name = "artista_id"))
+    // Asociación bidireccional
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "concierto_artista", joinColumns = @JoinColumn(name = "concierto_id"), inverseJoinColumns = @JoinColumn(name = "artista_id"))
     private Set<Artista> artistas = new HashSet<>();
 
     // Constructores
@@ -48,7 +46,7 @@ public class Concierto extends EventoMusical implements Serializable {
         this.artistas = artistas;
     }
 
-    // Métodos de conveniencia para asociación bidireccional
+    // Métodos para asignar artistas
     public void addArtista(Artista artista) {
         this.artistas.add(artista);
         artista.getConciertos().add(this);
