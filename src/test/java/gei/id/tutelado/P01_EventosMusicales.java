@@ -283,18 +283,4 @@ public class P01_EventosMusicales {
         assertTrue("No se encontraron artistas de Rock", count > 0);
         System.out.println("\t\t\tArtistas de Rock: " + count);
     }
-
-    // Test del método funcionhash
-    @Test
-    public void test13_FuncionHash() {
-        Artista artista;
-
-        System.out.println("\n\tProbando método funcionhash...");
-        artista = artistaDao.recuperaPorCodigo(1001);
-        
-        String hash = artista.funcionhash();
-        assertNotNull("Hash nulo", hash);
-        assertTrue("Hash no contiene prefijo", hash.startsWith("XDFE34RD39RTF55AK"));
-        System.out.println("\t\tHash generado: " + hash);
-    }
 }

@@ -11,7 +11,6 @@
    - Estrategia de herencia: **JOINED** (InheritanceType.JOINED)
    - Identificador con @TableGenerator para asignación automática
    - Métodos equals() y hashCode() usando clave natural (codigo_evento)
-   - Método funcionhash() implementado
 
 2. **Concierto** (hereda de EventoMusical)
    - Atributo específico: aforo (Integer)
@@ -28,7 +27,7 @@
    - Relación bidireccional con Concierto (**EAGER** - carga automática)
    - Relación con Festival (LAZY)
    - Identificador con @TableGenerator
-   - Métodos equals(), hashCode() y funcionhash()
+   - Métodos equals() y hashCode()
 
 ### 2. MAPEO JPA
 
@@ -87,9 +86,6 @@
 **Test08** - Consultas JPQL:
 - test12_ConsultasJPQL() - prueba las 4 consultas (INNER JOIN, OUTER JOIN, subconsulta, agregación)
 
-**Extra**:
-- test13_FuncionHash() - verifica el método funcionhash()
-
 ### 5. CONSULTAS JPQL IMPLEMENTADAS
 
 1. **INNER JOIN**: Contar conciertos de un artista específico
@@ -141,7 +137,6 @@
 ✅ Todas las clases con identificador Long y @TableGenerator
 ✅ Asociación bidireccional implementada (Concierto-Artista)
 ✅ equals() y hashCode() con clave natural en todas las clases
-✅ funcionhash() implementado en todas las clases
 ✅ Estrategia de herencia JOINED configurada
 ✅ Mínimo una asociación EAGER (Artista.conciertos)
 ✅ Mínimo una asociación LAZY (Concierto.artistas)

@@ -2,7 +2,6 @@ package gei.id.tutelado.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.persistence.*;
@@ -95,13 +94,6 @@ public abstract class EventoMusical implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(codigo_evento);
-    }
-
-    // MO2.2: Método funcionhash
-    public String funcionhash() {
-        LocalDateTime ahora = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return "XDFE34RD39RTF55AK" + ahora.format(formatter);
     }
 
     @Override
